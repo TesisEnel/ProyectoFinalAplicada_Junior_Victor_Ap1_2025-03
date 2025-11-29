@@ -2,14 +2,11 @@
 
 @inject PedidosServices pedidosService
 @inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
 
 <PageTitle>Gestión de Pedidos</PageTitle>
 
-<SectionContent SectionName="TituloPagina">
-    <div class="d-flex justify-content-center w-100">
-        <h3 class="m-0 fw-bold">Gestión de Pedidos</h3>
-    </div>
-</SectionContent>
+
 
 <div class="container">
     <div class="card card-glass rounded-4 p-2">
@@ -146,7 +143,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+        PageTitleService.SetTitle("Registrar Pedido");
         FechaInicio = DateTime.Now.AddDays(-30);
         FechaFin = DateTime.Now;
         await Buscar();

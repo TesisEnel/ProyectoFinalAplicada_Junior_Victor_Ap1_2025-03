@@ -3,14 +3,11 @@
 
 @inject EntradasServices entradasService
 @inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
 
 <PageTitle>Registro de Entradas</PageTitle>
 
-<SectionContent SectionName="TituloPagina">
-    <div class="d-flex justify-content-center w-100">
-        <h3 class="m-0 fw-bold">Historial de Entradas</h3>
-    </div>
-</SectionContent>
+
 
 <div class="container">
     <div class="card card-glass rounded-4 p-2">
@@ -128,7 +125,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+        PageTitleService.SetTitle("Registrar Entrada");
         FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         FechaFin = DateTime.Now;
 

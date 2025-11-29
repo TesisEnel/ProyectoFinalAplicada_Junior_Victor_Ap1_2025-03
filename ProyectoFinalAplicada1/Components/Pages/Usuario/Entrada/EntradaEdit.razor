@@ -4,6 +4,7 @@
 @inject EntradasServices entradasService
 @inject ProductosServices productosService
 @inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
 
 <PageTitle>Detalles de Entrada</PageTitle>
 
@@ -126,7 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-      
+        PageTitleService.SetTitle("Editar Entrada");
         ListaProveedores = await entradasService.ListarProveedores();
 
        

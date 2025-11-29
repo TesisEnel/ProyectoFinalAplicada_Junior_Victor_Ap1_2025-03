@@ -50,6 +50,10 @@ builder.Services.AddScoped<EntradasServices>();
 builder.Services.AddScoped<PedidosServices>();
 builder.Services.AddScoped<UsuarioServices>();
 builder.Services.AddScoped<ClientesServices>();
+builder.Services.AddScoped<ProveedoresServices>();
+builder.Services.AddSingleton<PageTitleService>();
+
+
 
 var app = builder.Build();
 

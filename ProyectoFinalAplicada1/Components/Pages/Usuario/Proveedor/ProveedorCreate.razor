@@ -1,0 +1,80 @@
+﻿@page "/Proveedor/Create"
+@rendermode InteractiveServer
+
+
+@inject ProveedoresServices proveedoresService
+@inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
+
+<PageTitle>Nuevo Proveedor</PageTitle>
+
+<SectionContent SectionName="TituloPagina">
+    <div class="d-flex justify-content-center w-100">
+        <h3 class="m-0 fw-bold">Nuevo Proveedor</h3>
+    </div>
+</SectionContent>
+
+<div class="container">
+    <div class="card card-glass rounded-4 p-2" style="max-width: 700px; margin: auto;">
+        
+        <EditForm Model="Proveedor" OnValidSubmit="Guardar" FormName="CrearProveedorForm">
+            <DataAnnotationsValidator />
+            
+            <div class="card-body">
+                @* Nombre *@
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Nombre</label>
+                    <InputText class="form-control input-glass" @bind-Value="Proveedor.Nombre" placeholder="Ej: Distribuidora XYZ" />
+                    <ValidationMessage For="(() => Proveedor.Nombre)" />
+                </div>
+
+                @* Teléfono *@
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Teléfono</label>
+                    <InputText class="form-control input-glass" @bind-Value="Proveedor.Telefono" placeholder="Ej: 809-555-1234" />
+                    <ValidationMessage For="(() => Proveedor.Telefono)" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(Mensaje))
+                {
+                    <div class="alert alert-danger text-center small py-2">@Mensaje</div>
+                }
+            </div>
+
+            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center mt-2 pt-0 pb-3 px-4">
+                <a href="/Proveedor/Index" class="btn btn-outline-secondary px-4">Volver</a>
+                <button type="submit" class="btn btn-gradiente px-5 shadow-sm">Guardar</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public Proveedor Proveedor { get; set; } = new Proveedor();
+    public string Mensaje { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        PageTitleService.SetTitle("Crear Producto");
+     
+    }
+
+    public async Task Guardar()
+    {
+        Mensaje = string.Empty;
+        
+        
+        if (await proveedoresService.ExisteNombre(Proveedor.Nombre))
+        {
+            Mensaje = "Ya existe un proveedor con este nombre.";
+            return;
+        }
+
+        var guardado = await proveedoresService.Guardar(Proveedor);
+        if (guardado)
+            navigationManager.NavigateTo("/Proveedor/Index");
+        else
+            Mensaje = "Error al guardar.";
+    }
+}

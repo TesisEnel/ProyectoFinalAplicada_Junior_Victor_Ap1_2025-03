@@ -24,6 +24,4 @@ public class Producto
     [Required]
     public int Existencia { get; set; }
 
-
-
 }
