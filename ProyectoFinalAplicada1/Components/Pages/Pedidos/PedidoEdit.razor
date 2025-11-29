@@ -3,14 +3,10 @@
 
 @inject PedidosServices pedidosService
 @inject NavigationManager navigationManager
-
+@inject PageTitleService PageTitleService
 <PageTitle>Gestionar Pedido</PageTitle>
 
-<SectionContent SectionName="TituloPagina">
-    <div class="d-flex justify-content-center w-100">
-        <h3 class="m-0 fw-bold">Gestionar Pedido #@Pedido.PedidoId</h3>
-    </div>
-</SectionContent>
+
 
 <div class="container">
     <div class="card card-glass rounded-4 p-2">
@@ -111,6 +107,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        PageTitleService.SetTitle("Editar Pedido");
         if (Pedido.PedidoId == 0)
         {
             var encontrado = await pedidosService.Buscar(PedidoId);

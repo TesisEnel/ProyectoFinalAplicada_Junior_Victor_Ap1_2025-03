@@ -13,6 +13,12 @@ public class ProveedoresServices(IDbContextFactory<Context> DbFactory)
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Proveedor.AnyAsync(c => c.ProveedorId == idProveedor);
     }
+    public async Task<bool> ExisteNombre(string nombre, int idExcluir = 0)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Proveedor
+            .AnyAsync(p => p.Nombre.ToLower() == nombre.ToLower() && p.ProveedorId != idExcluir);
+    }
 
     public async Task<Proveedor?> Buscar(int id)
     {
@@ -53,6 +59,13 @@ public class ProveedoresServices(IDbContextFactory<Context> DbFactory)
         await using var contexto = await DbFactory.CreateDbContextAsync();
         contexto.Update(proveedor);
         return await contexto.SaveChangesAsync() > 0;
+    }
+    public async Task<bool> Eliminar(int id)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Proveedor
+            .Where(p => p.ProveedorId == id)
+            .ExecuteDeleteAsync() > 0;
     }
 
 }

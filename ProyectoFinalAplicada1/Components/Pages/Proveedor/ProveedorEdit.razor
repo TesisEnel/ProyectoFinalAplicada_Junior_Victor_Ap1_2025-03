@@ -1,0 +1,104 @@
+﻿@page "/Proveedor/Edit/{ProveedorId:int}"
+@rendermode InteractiveServer
+
+
+@inject ProveedoresServices proveedoresService
+@inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
+
+<PageTitle>Editar Proveedor</PageTitle>
+
+
+
+<div class="container">
+    <div class="card card-glass rounded-4 p-2" style="max-width: 700px; margin: auto;">
+        
+        <EditForm Model="Proveedor" OnValidSubmit="Guardar" FormName="EditarProveedorForm">
+            <DataAnnotationsValidator />
+            
+            <div class="card-body">
+                
+                @* Nombre *@
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Nombre</label>
+                    <InputText class="form-control input-glass" @bind-Value="Proveedor.Nombre" />
+                    <ValidationMessage For="(() => Proveedor.Nombre)" />
+                </div>
+
+                @* Teléfono *@
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted">Teléfono</label>
+                    <InputText class="form-control input-glass" @bind-Value="Proveedor.Telefono" />
+                    <ValidationMessage For="(() => Proveedor.Telefono)" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(Mensaje))
+                {
+                    <div class="alert alert-danger text-center small py-2">@Mensaje</div>
+                }
+            </div>
+
+            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center mt-2 pt-0 pb-3 px-4">
+                <a href="/Proveedor/Index" class="btn btn-outline-secondary px-4">Volver</a>
+                
+                <div>
+                    @* Botón Eliminar *@
+                    <button type="button" class="btn btn-outline-danger me-2" @onclick="Eliminar">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                    <button type="submit" class="btn btn-gradiente px-4 shadow-sm">Guardar Cambios</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProveedorId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Proveedor Proveedor { get; set; } = new Proveedor();
+    public string Mensaje { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        PageTitleService.SetTitle("Editar Proveedor");
+        if (Proveedor.ProveedorId == 0)
+        {
+            var encontrado = await proveedoresService.Buscar(ProveedorId);
+            if (encontrado != null)
+                Proveedor = encontrado;
+            else
+                Mensaje = "Proveedor no encontrado.";
+        }
+    }
+
+    public async Task Guardar()
+    {
+        Mensaje = string.Empty;
+
+        // Validar nombre duplicado (excluyendo el actual)
+        if (await proveedoresService.ExisteNombre(Proveedor.Nombre, Proveedor.ProveedorId))
+        {
+            Mensaje = "Ya existe otro proveedor con este nombre.";
+            return;
+        }
+
+        var guardado = await proveedoresService.Guardar(Proveedor);
+        if (guardado)
+            navigationManager.NavigateTo("/Proveedor/Index");
+        else
+            Mensaje = "Error al modificar.";
+    }
+
+    public async Task Eliminar()
+    {
+        // Intentamos eliminar usando el método que agregué al servicio
+        var eliminado = await proveedoresService.Eliminar(Proveedor.ProveedorId);
+        if (eliminado)
+            navigationManager.NavigateTo("/Proveedor/Index");
+        else
+            Mensaje = "No se puede eliminar (posiblemente tiene registros asociados).";
+    }
+}

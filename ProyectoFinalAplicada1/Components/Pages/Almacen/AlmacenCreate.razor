@@ -2,15 +2,12 @@
 
 @inject ProductosServices productosService
 @inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
 @rendermode InteractiveServer
 
 <PageTitle>Crear Producto</PageTitle>
 
-<SectionContent SectionName="TituloPagina">
-    <div class="d-flex justify-content-center w-100">
-        <h3 class="m-0 fw-bold">Nuevo Producto</h3>
-    </div>
-</SectionContent>
+
 
 <div class="container">
 
@@ -126,9 +123,10 @@
 
     protected override void OnInitialized()
     {
-        
+        PageTitleService.SetTitle("Crear Producto");
         Producto.Existencia = 0; 
     }
+    
 
     public async Task Guardar()
     {

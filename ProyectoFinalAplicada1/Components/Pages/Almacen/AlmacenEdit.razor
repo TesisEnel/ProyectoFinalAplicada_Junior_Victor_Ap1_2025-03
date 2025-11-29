@@ -4,14 +4,10 @@
 
 @inject ProductosServices productosService
 @inject NavigationManager navigationManager
-
+@inject PageTitleService PageTitleService
 <PageTitle>Editar Producto</PageTitle>
 
-<SectionContent SectionName="TituloPagina">
-    <div class="d-flex justify-content-center w-100">
-        <h3 class="m-0 fw-bold">Editar Producto</h3>
-    </div>
-</SectionContent>
+
 
 <div class="container">
     <div class="card card-glass rounded-4 p-2">
@@ -139,7 +135,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Cargamos el producto solo si es la primera vez (para no sobrescribir lo que escribas si hay error)
+        PageTitleService.SetTitle("Editar Producto");
         if (Producto.ProductoId == 0)
         {
             var encontrado = await productosService.Buscar(ProductoId);

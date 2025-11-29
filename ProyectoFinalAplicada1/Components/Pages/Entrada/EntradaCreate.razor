@@ -4,6 +4,7 @@
 @inject EntradasServices entradasService
 @inject ProductosServices productosService
 @inject NavigationManager navigationManager
+@inject PageTitleService PageTitleService
 
 <PageTitle>Crear Entrada</PageTitle>
 
@@ -132,6 +133,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        PageTitleService.SetTitle("Crear Entrada"); 
         ListaProductos = await productosService.Listar(p => p.ProductoId > 0);
         ListaProveedores = await entradasService.ListarProveedores();
         Entrada.FechaEntrada = DateTime.Now;
