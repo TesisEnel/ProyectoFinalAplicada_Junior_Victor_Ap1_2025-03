@@ -52,7 +52,9 @@ builder.Services.AddScoped<UsuarioServices>();
 builder.Services.AddScoped<ClientesServices>();
 builder.Services.AddScoped<ProveedoresServices>();
 builder.Services.AddSingleton<PageTitleService>();
+builder.Services.AddScoped<TranferenciaServices>();
 builder.Services.AddScoped<CarritoService>();
+
 
 
 var app = builder.Build();

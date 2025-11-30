@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoFinalAplicada.Models;
 
@@ -27,4 +28,7 @@ public class Cliente
 
     [Required]
     public string DescripcionCliente { get; set; }
+
+    [ForeignKey("TransferenciaId")]
+    public ICollection<Transferencia> transferencia { get; set; } = new List<Transferencia>();
 }
