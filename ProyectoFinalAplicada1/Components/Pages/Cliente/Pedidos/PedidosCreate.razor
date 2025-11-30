@@ -22,7 +22,7 @@
 
             <div class="card-body">
 
-                @* --- SECCIÓN 1: DATOS DEL CLIENTE (Autocargados) --- *@
+                
                 <div class="row mb-4">
                     <div class="col-md-12">
                         <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">
@@ -30,19 +30,19 @@
                         </h6>
                     </div>
 
-                    @* Nombre (Solo lectura) *@
+                    
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted small fw-bold mb-1">Nombre</label>
                         <input type="text" class="form-control input-glass bg-light" value="@NombreClienteDisplay" readonly />
                     </div>
 
-                    @* Teléfono (Solo lectura) *@
+                  
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted small fw-bold mb-1">Teléfono</label>
                         <input type="text" class="form-control input-glass bg-light" value="@TelefonoClienteDisplay" readonly />
                     </div>
 
-                    @* Dirección (Autocargada, pero editable la referencia) *@
+                  
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-muted small fw-bold mb-1">Dirección / Referencia de Entrega</label>
                         <InputTextArea class="form-control input-glass" @bind-Value="Pedido.ReferenciaSitio" rows="2" placeholder="Ej: Casa azul, frente al parque..." />
@@ -52,7 +52,7 @@
                         </div>
                     </div>
 
-                    @* Switch Delivery *@
+                  
                     <div class="col-md-12">
                         <div class="form-check form-switch p-3 bg-warning bg-opacity-10 rounded border border-warning border-opacity-25">
                             <InputCheckbox class="form-check-input"
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                @* --- SECCIÓN 2: RESUMEN DE PRODUCTOS (Vienen del Carrito) --- *@
+                
                 <h6 class="fw-bold text-muted mb-3 border-bottom pb-2 mt-4">
                     <i class="bi bi-cart3"></i> Productos en Carrito
                 </h6>
@@ -151,7 +151,7 @@
     [SupplyParameterFromForm]
     public Pedido Pedido { get; set; } = new Pedido();
 
-    // Variables para mostrar en pantalla (Readonly)
+   
     public string NombreClienteDisplay { get; set; } = "Cargando...";
     public string TelefonoClienteDisplay { get; set; } = "";
 
@@ -160,34 +160,34 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // 1. CARGAR PRODUCTOS DESDE EL CARRITO (Servicio)
+        
         if (carritoService.Carrito.Any())
         {
-            // Copiamos los items del servicio al modelo del formulario
+            
             Pedido.Detalles = new List<PedidoDetalle>(carritoService.Carrito);
             CalcularTotal();
         }
 
         Pedido.FechaPedido = DateTime.Now;
 
-        // 2. AUTOCARGAR DATOS DEL CLIENTE LOGUEADO
+        
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
         if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            var nombreUsuario = user.Identity.Name; // Usualmente el email
+            var nombreUsuario = user.Identity.Name; 
             var clienteEncontrado = await clientesService.BuscarPorCorreo(nombreUsuario ?? "");
 
             if (clienteEncontrado != null)
             {
                 Pedido.ClienteId = clienteEncontrado.ClienteId;
 
-                // Llenamos campos visuales
+                
                 NombreClienteDisplay = $"{clienteEncontrado.NombreCliente} {clienteEncontrado.ApellidoCliente}";
                 TelefonoClienteDisplay = clienteEncontrado.TelefonoCliente;
 
-                // Autocompletar dirección si está vacía
+                
                 if (string.IsNullOrEmpty(Pedido.ReferenciaSitio))
                 {
                     Pedido.ReferenciaSitio = $"{clienteEncontrado.CalleCliente} #{clienteEncontrado.ViviendaCliente}, {clienteEncontrado.Sector} ({clienteEncontrado.DescripcionCliente})";
@@ -201,7 +201,7 @@
         }
         else
         {
-            // Si no está logueado, redirigir al login (opcional)
+           
             navigationManager.NavigateTo("Account/Login");
         }
     }
@@ -231,19 +231,19 @@
             return;
         }
 
-        // Asignar estado inicial
+       
         Pedido.Estado = "Pendiente";
 
         var guardado = await pedidosService.Guardar(Pedido);
 
         if (guardado)
         {
-            // Limpiar carrito global después de guardar
+           
             carritoService.LimpiarCarrito();
 
             Mensaje = "¡Pedido enviado correctamente! 🎉 Te contactaremos pronto.";
             await Task.Delay(3000);
-            navigationManager.NavigateTo("/"); // Volver al inicio
+            navigationManager.NavigateTo("/"); 
         }
         else
         {
