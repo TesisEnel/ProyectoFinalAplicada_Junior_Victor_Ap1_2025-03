@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoFinalAplicada1.Models;
+namespace ProyectoFinalAplicada.Models;
 
 public class TransferenciaImagen
 {

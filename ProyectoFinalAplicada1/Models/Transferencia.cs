@@ -1,4 +1,4 @@
-﻿using ProyectoFinalAplicada1.Models;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
