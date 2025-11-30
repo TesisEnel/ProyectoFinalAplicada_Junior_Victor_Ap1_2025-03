@@ -1,0 +1,66 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using ProyectoFinalAplicada1.Data; // ⬅️ Asegúrate de que este using sea correcto
+
+public static class SeedData
+{
+    public static async Task InitializeAsync(IServiceProvider serviceProvider)
+    {
+        // 1. Obtener los servicios necesarios
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // 2. Definir los roles que quieres crear
+        string[] roleNames = { "Administrador", "Cliente" };
+
+        // Crear los roles si no existen
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
+
+        // 3. Crear un usuario Administrador (si no existe)
+        const string adminEmail = "admin@gmail.com"; // Usar minúsculas es más seguro
+        const string adminPassword = "@Clave123";
+
+        if (await userManager.FindByEmailAsync(adminEmail) == null)
+        {
+            var adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+
+                // 🔑 INICIALIZACIÓN DE CAMPOS REQUERIDOS DE CLIENTE/USUARIO:
+                // Si ApplicationUser heredó o implementó campos [Required] de tu modelo Cliente,
+                // DEBEN inicializarse aquí para que CreateAsync no falle.
+                NombreCliente = "Administrador",
+                ApellidoCliente = "Principal",
+                TelefonoCliente = "8090000000",
+                Sector = "Sistema",
+                CalleCliente = "N/A",
+                ViviendaCliente = "N/A",
+                DescripcionCliente = "Cuenta de Administración",
+            };
+
+            var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+            if (result.Succeeded)
+            {
+                // 4. Asignar el rol de "Administrador"
+                await userManager.AddToRoleAsync(adminUser, "Administrador");
+            }
+            else
+            {
+                // 🚨 CÓDIGO DE MANEJO DE ERRORES: Muestra la causa exacta del fallo 🚨
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+                // Lanza una excepción para que el fallo se registre en la consola/logs.
+                throw new Exception($"El seeding del Admin falló: {errors}. Verifique los requisitos de contraseña o los campos [Required] de ApplicationUser.");
+            }
+        }
+    }
+}
