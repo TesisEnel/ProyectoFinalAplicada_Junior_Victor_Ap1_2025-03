@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject PageTitleService PageTitleService
 
 @{
     // Obtiene la URL relativa actual para usarla como ReturnUrl en el formulario de Logout.
@@ -9,7 +10,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid text-center" style="transform: translateX(-15px);">
-        <a class="navbar-brand logo-centrado" href="">
+        <a class="navbar-brand logo-centrado" href="/Resumen">
             <img src="imagenes/Logo.png" alt="Logo" style="height: 140px; width: auto;" />
         </a>
     </div>
@@ -75,9 +76,10 @@
                     <form action="Account/Logout" method="post" data-enhance="false">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link" href="Account/Login">
+                        <button type="submit" class="nav-link" @onclick="Volver">
                             <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
                         </button>
+                        
                     </form>
                 </div>
             </Authorized>
@@ -113,6 +115,13 @@
     {
         // Forzamos el re-renderizado
         StateHasChanged();
+    }
+
+    public void Volver()
+    {
+        NavigationManager.NavigateTo("Account/Login");
+        PageTitleService.SetTitle("Almacen");
+ 
     }
 
     public void Dispose()

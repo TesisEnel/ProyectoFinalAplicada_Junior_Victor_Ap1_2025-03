@@ -1,9 +1,16 @@
 ﻿@page "/TransferenciaCliente/Index"
+@using Microsoft.AspNetCore.Authorization
 @using ProyectoFinalAplicada.Models
 @using ProyectoFinalAplicada.Services
 @inject TranferenciaServices TransferenciaService
 @inject NavigationManager navigationManager
 @inject PageTitleService PageTitleService
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ProyectoFinalAplicada1.DAL.Context _context
+@using Microsoft.EntityFrameworkCore
+
+@attribute [Authorize(Roles = "Cliente")]
 
 <PageTitle>Gestión de Transferencias</PageTitle>
 
@@ -117,17 +124,39 @@
     protected override async Task OnInitializedAsync()
     {
         PageTitleService.SetTitle("Transferencias");
-        // Establecer el rango inicial de 30 días
+        
         FechaInicio = DateTime.Now.AddDays(-30);
         FechaFin = DateTime.Now;
         await Buscar();
     }
 
+    public async Task<int> GetClienteIdAsync()
+    {
+        // 1. Obtener el GUID (Identity User ID)
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var identityId = authState.User
+            .FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(identityId))
+        {
+            return 0; // Usuario no logueado o ID no encontrado
+        }
+
+        // 2. Consultar la base de datos para obtener el ClienteId
+        return await _context.Cliente
+            .Where(c => c.UserId == identityId)
+            .Select(c => c.ClienteId) 
+            .FirstOrDefaultAsync();    
+    }
+
     private async Task Buscar()
     {
-        // Obtener todas las transferencias para empezar el filtrado en memoria
-        // NOTA: Para grandes volúmenes de datos, deberías hacer el filtro en la consulta SQL (en el servicio).
+    
         var lista = await TransferenciaService.Listar(t => t.TransferenciaId > 0);
+
+        int id = await GetClienteIdAsync();
+
+        // lista = lista.Where(p => p. == id).ToList();
 
         // 1. Filtrar por Fechas
         if (FechaInicio.HasValue)
@@ -135,7 +164,6 @@
         if (FechaFin.HasValue)
             lista = lista.Where(t => t.Fecha.Date <= FechaFin.Value.Date).ToList();
 
-        // 2. Filtrar por Texto (Origen, Destino, Observaciones)
         if (!string.IsNullOrWhiteSpace(ValorFiltro))
         {
             lista = lista.Where(t => 

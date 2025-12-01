@@ -33,10 +33,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
-    // Opciones de configuraci贸n adicionales
+    // Opciones de configuración adicionales
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultUI() // Asegura que todos los servicios de la UI (incluyendo el de roles) est茅n presentes
+.AddDefaultUI() // Asegura que todos los servicios de la UI (incluyendo el de roles) estén presentes
 .AddDefaultTokenProviders();
 
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
@@ -44,9 +44,9 @@ var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContextFactory<Context>(c =>
     c.UseSqlite(ConStr, sqliteOptions =>
     {
-        // 馃攽 FORZAR LA VERIFICACI脫N DE CLAVE FOR脕NEA (CR脥TICO EN SQLITE)
+        // 🔑 FORZAR LA VERIFICACIÓN DE CLAVE FORÁNEA (CRÍTICO EN SQLITE)
         // Aunque a menudo es el default, a veces forzarlo ayuda.
-        // No hay un m茅todo directo aqu铆, la mejor forma es revisar la cadena de conexi贸n.
+        // No hay un método directo aquí, la mejor forma es revisar la cadena de conexión.
     }));
 
 builder.Services.AddDbContextFactory<Context>(c => c.UseSqlite(ConStr));
@@ -72,13 +72,13 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        // Llamada a la funci贸n de inicializaci贸n de datos
+        // Llamada a la función de inicialización de datos
         await SeedData.InitializeAsync(services);
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocurri贸 un error al sembrar la base de datos con roles.");
+        logger.LogError(ex, "Ocurrió un error al sembrar la base de datos con roles.");
     }
 }
 
