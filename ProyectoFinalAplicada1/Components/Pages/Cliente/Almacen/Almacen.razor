@@ -14,9 +14,35 @@
 
 <div class="container-fluid mt-4">
     <div class="row">
+                <div class="col-4">
+                    <label class="form-label text-muted small fw-bold mb-1">Filtrar por Categoria</label>
+                     <InputSelect class="form-select input-glass" @bind-Value="Filtro">
+                            <option value="Ninguna">Ninguna</option>
+                            <option value="Carnes">Carnes</option>
+                            <option value="Granos">Granos</option>
+                            <option value="Verduras">Verduras</option>
+                            <option value="Vegetales">Vegetales</option>
+                            <option value="Ensaladas">Ensaladas</option>
+                            <option value="Frutas">Frutas</option>
+                            <option value="Sazones">Sazones</option>
+                            <option value="Víveres">Víveres</option>
+                        </InputSelect>
+                </div>
+               
+                <div class="col-md-4">
+                    <label class="form-label text-muted small fw-bold mb-1">Buscar</label>
+                    <div class="input-group">
+                        <input class="form-control input-glass" @bind="ValorFiltro" placeholder="Nombre del Producto..." />
+                        <button type="button" class="btn btn-outline-success bi bi-search" @onclick="Buscar"></button>
+                        <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise" @onclick="Restablecer" title="Limpiar"></button>
+                    </div>
+                </div>
+        
+    </div>
+    <div class="row">
 
         @* -- COLUMNA IZQUIERDA: PRODUCTOS (Sin cambios) -- *@
-        <div class="col-lg-8">
+        <div class="col-lg-8 mt-4">
             <div class="row">
                 @foreach (var prod in ListaProductos)
                 {
@@ -137,17 +163,50 @@
 
 @code {
     public List<Producto> ListaProductos { get; set; } = new List<Producto>();
-    
+
     // VARIABLE NUEVA: Controla si se ven los items o solo el resumen
     private bool carritoExpandido = true;
+    public string ValorFiltro { get; set; } = string.Empty;
+    public string Filtro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         PageTitleService.SetTitle("Tienda");
         ListaProductos = await productosService.Listar(p => p.Existencia > 0);
+
     }
 
- 
+
+    private async Task Buscar()
+    {
+        var lista = await productosService.Listar(p => p.ProductoId > 0);
+
+
+        if (!string.IsNullOrWhiteSpace(ValorFiltro) && Filtro.Equals("Ninguna"))
+        {
+            lista = lista.Where(p => p.NombreProducto.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else if(string.IsNullOrWhiteSpace(ValorFiltro) && !Filtro.Equals("Ninguna"))
+        {
+            lista = lista.Where(p => p.Categoria.Contains(Filtro, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        else if(!string.IsNullOrWhiteSpace(ValorFiltro) && !Filtro.Equals("Ninguna"))
+        {
+            lista = lista.Where((p => p.Categoria.Contains(Filtro, StringComparison.OrdinalIgnoreCase)
+            && p.NombreProducto.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase) )).ToList();
+
+        }
+
+        ListaProductos = lista;
+
+    }
+
+    private async Task Restablecer()
+    {
+        ValorFiltro = string.Empty;
+        Filtro = "Ninguna";
+        await Buscar();
+    }
     private void ToggleCarrito()
     {
         carritoExpandido = !carritoExpandido;
