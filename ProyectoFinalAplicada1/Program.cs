@@ -52,7 +52,7 @@ builder.Services.AddScoped<ProveedoresServices>();
 builder.Services.AddScoped<PageTitleService>();
 builder.Services.AddScoped<TranferenciaServices>();
 builder.Services.AddScoped<CarritoService>();
-
+builder.Services.AddScoped<ListasPreciosService>();
 
 
 var app = builder.Build();
