@@ -21,4 +21,5 @@ public class ApplicationUser : IdentityUser
     public string? RazonSocial { get; set; } 
     public string? RNC { get; set; } 
     public string? TelefonoNegocio { get; set; }
+    public string EstadoCredito { get; set; } = "Pendiente";
 }

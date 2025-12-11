@@ -1,72 +1,77 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectoFinalAplicada.Models;
 using ProyectoFinalAplicada1.DAL;
-using System.Linq.Expressions;
+
 
 namespace ProyectoFinalAplicada.Services;
 
 public class AbonosService(IDbContextFactory<Context> DbFactory)
 {
-    public async Task<bool> Existe(int id)
-    {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Abono.AnyAsync(a => a.AbonoId == id);
-    }
-
-    public async Task<Abono?> Buscar(int id)
-    {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Abono
-            .Include(a => a.Cliente) // Incluimos Cliente por si necesitas ver el nombre
-            .FirstOrDefaultAsync(a => a.AbonoId == id);
-    }
-
-    public async Task<List<Abono>> Listar(Expression<Func<Abono, bool>> criterio)
-    {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Abono
-            .Include(a => a.Cliente)
-            .Where(criterio)
-            .AsNoTracking()
-            .ToListAsync();
-    }
-
-    public async Task<bool> Insertar(Abono abono)
+    public async Task<bool> Guardar(Abono abono)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         contexto.Abono.Add(abono);
         return await contexto.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> Modificar(Abono abono)
+    public async Task<List<Abono>> Listar()
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        contexto.Update(abono);
-        return await contexto.SaveChangesAsync() > 0;
+        return await contexto.Abono.Include(a => a.Cliente).AsNoTracking().ToListAsync();
     }
 
-    public async Task<bool> Guardar(Abono abono)
-    {
-        if (!await Existe(abono.AbonoId))
-        {
-            return await Insertar(abono);
-        }
-        else
-        {
-            return await Modificar(abono);
-        }
-    }
-
-    public async Task<bool> Eliminar(int id)
+    public async Task<double> CalcularDeuda(int clienteId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        var abono = await contexto.Abono.FindAsync(id);
-
-        if (abono != null)
-        {
-            contexto.Abono.Remove(abono);
-            return await contexto.SaveChangesAsync() > 0;
-        }
-        return false;
+        var credito = await contexto.Pedido.Where(p => p.ClienteId == clienteId && p.MetodoPago == "Credito").SumAsync(p => p.MontoTotal);
+        var pagado = await contexto.Abono.Where(a => a.ClienteId == clienteId).SumAsync(a => a.Monto);
+        return credito - pagado;
     }
+    public async Task<List<ClienteDeudaDTO>> ObtenerReporteDeudas()
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+
+       
+        var clientes = await contexto.Cliente.AsNoTracking().ToListAsync();
+        var listaReporte = new List<ClienteDeudaDTO>();
+
+        foreach (var c in clientes)
+        {
+           
+
+            double totalCredito = await contexto.Pedido
+                .Where(p => p.ClienteId == c.ClienteId && p.MetodoPago == "Credito")
+                .SumAsync(p => p.MontoTotal);
+
+            if (totalCredito > 0) 
+            {
+                double totalAbonado = await contexto.Abono
+                    .Where(a => a.ClienteId == c.ClienteId)
+                    .SumAsync(a => a.Monto);
+
+                double deuda = totalCredito - totalAbonado;
+
+               
+                if (deuda > 0 || totalCredito > 0)
+                {
+                    listaReporte.Add(new ClienteDeudaDTO
+                    {
+                        Cliente = c,
+                        TotalCredito = totalCredito,
+                        TotalPagado = totalAbonado,
+                        DeudaPendiente = deuda
+                    });
+                }
+            }
+        }
+        return listaReporte.OrderByDescending(x => x.DeudaPendiente).ToList();
+    }
+}
+
+public class ClienteDeudaDTO
+{
+    public Cliente Cliente { get; set; } = new();
+    public double TotalCredito { get; set; }
+    public double TotalPagado { get; set; }
+    public double DeudaPendiente { get; set; }
 }

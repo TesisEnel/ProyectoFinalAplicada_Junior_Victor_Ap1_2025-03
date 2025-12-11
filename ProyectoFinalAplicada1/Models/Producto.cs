@@ -16,6 +16,10 @@ public class Producto
     [Required]
     public double Precio { get; set; }
 
+    [Required(ErrorMessage = "El precio para empresas es obligatorio")]
+    [Range(1, 100000, ErrorMessage = "El precio debe ser mayor a 0")]
+    public double PrecioEmpresa { get; set; } 
+
     [Required]
     public string UnidadMedida { get; set; }
     [Required]

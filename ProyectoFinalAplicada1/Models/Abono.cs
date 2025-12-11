@@ -10,14 +10,14 @@ public class Abono
     [Key]
     public int AbonoId { get; set; }
 
-    [Required(ErrorMessage = "Debe seleccionar un cliente")]
+    [Required(ErrorMessage = "Seleccione el cliente")]
     public int ClienteId { get; set; }
 
     [ForeignKey("ClienteId")]
     public Cliente? Cliente { get; set; }
 
     [Required(ErrorMessage = "El monto es obligatorio")]
-    [Range(0.01, 1000000, ErrorMessage = "El monto debe ser mayor a 0")]
+    [Range(0.01, 10000000, ErrorMessage = "Monto inválido")]
     public double Monto { get; set; }
 
     public string Observacion { get; set; } = string.Empty;

@@ -18,6 +18,8 @@ public class Pedido
     [Required]
     public double MontoTotal { get; set; }
     [Required]
+    public string MetodoPago { get; set; } = "Efectivo";
+    [Required]
     public string Estado { get; set; } = "Pendiente";
     [Required]
     public bool Delivery { get; set; }
