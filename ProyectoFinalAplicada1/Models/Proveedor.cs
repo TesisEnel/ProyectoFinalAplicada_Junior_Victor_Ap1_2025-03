@@ -8,7 +8,7 @@ public class Proveedor
     [Key]
     public int ProveedorId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio")]
     public string Nombre { get; set; }
 
     [Required(ErrorMessage = "El teléfono es obligatorio.")]

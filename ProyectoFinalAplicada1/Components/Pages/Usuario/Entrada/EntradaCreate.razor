@@ -21,16 +21,16 @@
             <DataAnnotationsValidator />
 
             <div class="card-body">
-                @* --- CABECERA --- *@
+               
                 <div class="row mb-4">
-                    @* Fecha *@
+                 
                     <div class="col-md-3">
                         <label class="form-label text-muted small fw-bold mb-1">Fecha Entrada</label>
                         <InputDate class="form-control input-glass" @bind-Value="Entrada.FechaEntrada" />
                         <ValidationMessage For="(() => Entrada.FechaEntrada)" />
                     </div>
 
-                    @* Proveedor *@
+            
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold mb-1">Proveedor</label>
                         <InputSelect class="form-select input-glass" @bind-Value="Entrada.ProveedorId">
@@ -43,7 +43,7 @@
                         <ValidationMessage For="(() => Entrada.ProveedorId)" />
                     </div>
 
-                    @* Concepto *@
+                 
                     <div class="col-md-5">
                         <label class="form-label text-muted small fw-bold mb-1">Concepto</label>
                         <InputText class="form-control input-glass" @bind-Value="Entrada.Concepto" placeholder="Concepto de la entrada" />
@@ -53,11 +53,9 @@
 
                 <hr class="border-secondary opacity-25" />
 
-                @* --- DETALLE MEJORADO --- *@
                 <div class="card bg-light border-0 mb-3 p-3">
                     <h6 class="text-muted fw-bold mb-3">Agregar Producto al Inventario</h6>
 
-                    @* Selección del Producto *@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold">Producto</label>
@@ -87,12 +85,10 @@
                         </div>
                     </div>
 
-                    @* Inputs Dinámicos según el Modo *@
                     <div class="row align-items-end">
 
                         @if (TipoEntrada == "Pesaje")
                         {
-                            @* CALCULADORA PARA POLLOS / JAULAS *@
                             <div class="col-md-3">
                                 <label class="form-label small text-muted">Peso Bruto (con Jaula)</label>
                                 <input type="number" class="form-control" @bind="PesoBruto" @bind:after="CalcularCantidad" />
@@ -104,7 +100,6 @@
                         }
                         else if (TipoEntrada == "Conversion")
                         {
-                            @* CALCULADORA PARA SACOS / CAJAS *@
                             <div class="col-md-3">
                                 <label class="form-label small text-muted">Cant. Envases (Sacos/Cajas)</label>
                                 <input type="number" class="form-control" @bind="CantidadEmpaques" @bind:after="CalcularCantidad" />
@@ -115,18 +110,17 @@
                             </div>
                         }
 
-                        @* RESULTADO FINAL (Lo que se guarda en BD) *@
                         <div class="col-md-3">
                             <label class="form-label small fw-bold text-success">Cantidad Neta a Entrar</label>
-                            @* Si es calculado, lo ponemos readonly para que vean el resultado *@
+                           
                             <InputNumber class="form-control input-glass fw-bold" @bind-Value="Detalle.Cantidad"
                                          disabled="@(TipoEntrada != "Directa")" />
                         </div>
 
-                        <div class="col-md-3">
+                        @* <div class="col-md-3">
                             <label class="form-label small fw-bold">Costo Unitario</label>
                             <InputNumber class="form-control input-glass" @bind-Value="Costo" />
-                        </div>
+                        </div> *@
                     </div>
 
                     <div class="row mt-3">
@@ -138,7 +132,6 @@
                     </div>
                 </div>
 
-                @* --- TABLA --- *@
                 <div class="table-responsive mt-4">
                     <table class="table table-hover bg-transparent align-middle">
                         <thead class="text-black" style="background-color: rgba(0,0,0,0.03);">

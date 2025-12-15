@@ -9,36 +9,35 @@ public class Cliente
     [Key]
     public int ClienteId { get; set; }
 
-    [Required]
-    public string UserId { get; set; } // Enlaza con ApplicationUser.Id
+    [Required(ErrorMessage = "Campo obligatorio.")]
+    public string UserId { get; set; }
 
-    // Propiedad de navegación (Opcional, pero útil)
     [ForeignKey(nameof(UserId))]
     public ApplicationUser User { get; set; } = null!;
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string NombreCliente { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string ApellidoCliente { get; set; }
 
-    [Required(ErrorMessage = "El teléfono es obligatorio.")]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     [RegularExpression(@"^(809|829|849)-\d{3}-\d{4}$",
-         ErrorMessage = "El teléfono debe tener el formato 809-000-0000 y comenzar con 809, 829 o 849.")]
+        ErrorMessage = "Formato incorrecto (XXX-XXX-XXXX).")]
     public string TelefonoCliente { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string Sector { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string CalleCliente { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string ViviendaCliente { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio.")]
     public string DescripcionCliente { get; set; }
 
-   
+
     public ICollection<Transferencia> transferencia { get; set; } = new List<Transferencia>();
 }

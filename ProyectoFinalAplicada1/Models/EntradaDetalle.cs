@@ -4,17 +4,21 @@ using ProyectoFinalAplicada.Models;
 
 namespace ProyectoFinalAplicada.Models;
 
-    public class EntradaDetalle
-    {
+public class EntradaDetalle
+{
     [Key]
     public int DetalleId { get; set; }
+
+    [Required(ErrorMessage = "El ID de la Entrada es obligatorio.")]
+    [Range(1, int.MaxValue, ErrorMessage = "El ID de la Entrada debe ser un valor positivo.")]
     public int EntradaId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Debe seleccionar un producto.")]
+    [Range(1, int.MaxValue, ErrorMessage = "El ID del Producto debe ser un valor positivo.")]
     public int ProductoId { get; set; }
 
-    [Required]
-    
+    [Required(ErrorMessage = "La cantidad es obligatoria.")]
+    [Range(1, int.MaxValue, ErrorMessage = "La Cantidad debe ser mayor que cero.")]
     public int Cantidad { get; set; }
 
     [ForeignKey("ProductoId")]

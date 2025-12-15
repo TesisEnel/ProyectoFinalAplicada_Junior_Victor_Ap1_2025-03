@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System;
+using System.Collections.Generic;
 
 namespace ProyectoFinalAplicada.Models;
 
@@ -9,12 +10,13 @@ public class Entrada
     [Key]
     public int EntradaId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "La fecha de entrada es obligatoria.")]
     public DateTime FechaEntrada { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "El concepto de la entrada es obligatorio.")]
     public string Concepto { get; set; } = string.Empty;
-    [Required]
+
+    [Required(ErrorMessage = "Debe seleccionar un proveedor.")]
     public int ProveedorId { get; set; }
 
     [ForeignKey("ProveedorId")]
