@@ -11,10 +11,6 @@
 
 @attribute [Authorize(Roles = "Cliente")]
 
-<SectionContent SectionName="TituloPagina">
-   
-</SectionContent>
-
 <div class="container">
     <div class="card card-glass rounded-4 p-2">
         <div class="card-body">
@@ -116,6 +112,9 @@
 
                                 <td class="text-center">
                                     <a href="/PedidoCliente/Edit/@pedido.PedidoId" class="btn btn-sm btn-outline-info bi bi-info-circle-fill" title="Ver Detalle"></a>
+                                    <a href="/Factura/Details/@pedido.PedidoId" class="btn btn-outline-secondary" title="Ver Factura">
+                                        <i class="bi bi-receipt"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }

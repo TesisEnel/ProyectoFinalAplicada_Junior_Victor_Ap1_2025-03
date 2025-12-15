@@ -41,20 +41,36 @@ public class PedidosServices(IDbContextFactory<Context> DbFactory)
             return await Insertar(pedido);
         else
             return await Modificar(pedido);
+
     }
 
     private async Task<bool> Insertar(Pedido pedido)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
 
+        
         contexto.Pedido.Add(pedido);
         var guardado = await contexto.SaveChangesAsync() > 0;
 
         if (!guardado) return false;
 
+        
+        var nuevaFactura = new Factura
+        {
+            PedidoId = pedido.PedidoId,
+            ClienteId = pedido.ClienteId,
+            FechaEmision = DateTime.Now,
+            MontoTotal = pedido.MontoTotal,
+            
+            CodigoFactura = $"FAC-{pedido.PedidoId:D6}"
+        };
+
+        contexto.Factura.Add(nuevaFactura);
+        await contexto.SaveChangesAsync(); 
+
         if (pedido.Estado == "Entregado")
         {
-            await AfectarExistencia(contexto, pedido.Detalles.ToList(), false); 
+            await AfectarExistencia(contexto, pedido.Detalles.ToList(), false);
         }
 
         return true;
@@ -151,8 +167,13 @@ public class PedidosServices(IDbContextFactory<Context> DbFactory)
             .Where(p => p.Estado == "Entregado")
             .SumAsync(p => p.MontoTotal);
     }
-
-   
+ 
+    public async Task<Factura?> BuscarFacturaPorPedido(int pedidoId)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Factura
+            .FirstOrDefaultAsync(f => f.PedidoId == pedidoId);
+    }
 
     public async Task<int> ContarPedidosPendientes()
     {

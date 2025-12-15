@@ -34,7 +34,7 @@ public class Context : DbContext
     public DbSet<Abono> Abono { get; set; }
     public DbSet<UnidadMedida> UnidadMedida { get; set; }
     public DbSet<Sector> Sector { get; set; }
-
+    public DbSet<Factura> Factura { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

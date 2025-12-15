@@ -531,3 +531,44 @@ table {
         opacity: 1;
     }
 }
+
+.factura-sheet {
+    background: white;
+    min-height: 25cm; 
+    position: relative;
+}
+
+
+@media print {
+ 
+    body * {
+        visibility: hidden;
+    }
+
+
+    .factura-sheet, .factura-sheet * {
+        visibility: visible;
+    }
+
+   
+    .factura-sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none !important; 
+        border: none !important; 
+    }
+
+   
+    .d-print-none {
+        display: none !important;
+    }
+
+    .card {
+        background-color: white !important;
+        -webkit-print-color-adjust: exact;
+    }
+}
