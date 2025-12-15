@@ -8,9 +8,8 @@ public class TransferenciaImagen
     public int TransferenciaImagenId { get; set; }
 
     [Required]
-    public int TransferenciaId { get; set; } // Clave Foránea
+    public int TransferenciaId { get; set; }
 
     [Required]
-    // **Aquí es donde guardas la ruta (string) en SQL**
     public string RutaImagen { get; set; }
 }

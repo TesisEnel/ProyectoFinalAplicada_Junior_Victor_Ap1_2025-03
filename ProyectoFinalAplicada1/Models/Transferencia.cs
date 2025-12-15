@@ -9,16 +9,16 @@ public class Transferencia
     [Key]
     public int TransferenciaId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio")]
     public DateTime Fecha { get; set; } = DateTime.Now;
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio")]
     public string Origen { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Campo obligatorio")]
     public string Destino { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Tiene que Tener un Monto 😪")]
     [Range(0.01, double.MaxValue, ErrorMessage = "El monto transferido debe ser mayor a 0.")]
     public double Monto { get; set; }
 

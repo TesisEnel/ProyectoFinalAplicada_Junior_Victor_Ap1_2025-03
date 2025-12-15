@@ -5,6 +5,7 @@ namespace ProyectoFinalAplicada.Models;
 public class  Usuario
 {
     //El alpha el jefe el animal the best
+    //Borra este modelo
     [Key]
     public int UsuarioId { get; set; }
 

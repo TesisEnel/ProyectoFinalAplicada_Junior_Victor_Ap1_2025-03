@@ -19,29 +19,6 @@
            
             <div class="row align-items-end mb-3">
                 
-              
-                <div class="col-md-3">
-                    <label class="form-label text-muted small fw-bold mb-1">Filtrar por</label>
-                    <InputSelect class="form-select input-glass" @bind-Value="Filtro">
-                        <option value="" selected disabled>Elija una opción</option>
-                        <option value="Proveedor">Proveedor</option>
-                        <option value="Referencia">Referencia (Factura)</option>
-                        <option value="Concepto">Concepto</option>
-                    </InputSelect>
-                </div>
-
-           
-                <div class="col-md-9">
-                    <label class="form-label text-muted small fw-bold mb-1">Búsqueda</label>
-                    <div class="input-group">
-                        <input class="form-control input-glass" @bind="ValorFiltro" placeholder="Escriba para buscar..." />
-                    </div>
-                </div>
-            </div>
-
-           
-            <div class="row align-items-end mb-4">
-                
                 <div class="col-md-3">
                     <label class="form-label text-muted small fw-bold mb-1">Desde</label>
                     <InputDate class="form-control input-glass" @bind-Value="FechaInicio" />
@@ -52,9 +29,34 @@
                     <InputDate class="form-control input-glass" @bind-Value="FechaFin" />
                 </div>
 
+                
+            </div>
+
+           
+            <div class="row align-items-end mb-4">
+                
+                <div class="col-md-3">
+                    <label class="form-label text-muted small fw-bold mb-1">Filtrar por</label>
+                    <InputSelect class="form-select input-glass" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opción</option>
+                        <option value="Proveedor">Proveedor</option>
+                        <option value="Referencia">Referencia (Factura)</option>
+                        <option value="Concepto">Concepto</option>
+                    </InputSelect>
+                </div>
+
+
+                <div class="col-md-3">
+                    <label class="form-label text-muted small fw-bold mb-1">Búsqueda</label>
+                    <div class="input-group">
+                        <input class="form-control input-glass" @bind="ValorFiltro" placeholder="Escriba para buscar..." />
+                        <button type="button" class="btn btn-outline-success bi bi-search" @onclick="Buscar"></button>
+                    </div>
+                </div>
+
                 <div class="col-md-6 text-end">
                     <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-outline-success bi bi-search" @onclick="Buscar"> Buscar</button>
+                        
                         <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise" @onclick="Restablecer"> Limpiar</button>
                         
                   
