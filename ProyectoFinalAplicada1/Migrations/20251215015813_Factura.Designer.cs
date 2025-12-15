@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinalAplicada1.DAL;
 
@@ -10,9 +11,11 @@ using ProyectoFinalAplicada1.DAL;
 namespace ProyectoFinalAplicada1.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20251215015813_Factura")]
+    partial class Factura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -145,36 +148,6 @@ namespace ProyectoFinalAplicada1.Migrations
                     b.HasIndex("ProductoId");
 
                     b.ToTable("EntradaDetalles");
-                });
-
-            modelBuilder.Entity("ProyectoFinalAplicada.Models.Factura", b =>
-                {
-                    b.Property<int>("FacturaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CodigoFactura")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("FechaEmision")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("MontoTotal")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("PedidoId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("FacturaId");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("PedidoId");
-
-                    b.ToTable("Factura");
                 });
 
             modelBuilder.Entity("ProyectoFinalAplicada.Models.Pedido", b =>
@@ -468,25 +441,6 @@ namespace ProyectoFinalAplicada1.Migrations
                         .IsRequired();
 
                     b.Navigation("Producto");
-                });
-
-            modelBuilder.Entity("ProyectoFinalAplicada.Models.Factura", b =>
-                {
-                    b.HasOne("ProyectoFinalAplicada.Models.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoFinalAplicada.Models.Pedido", "Pedido")
-                        .WithMany()
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("ProyectoFinalAplicada.Models.Pedido", b =>
